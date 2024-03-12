@@ -1,0 +1,37 @@
+services: 
+  raft0:
+    networks:
+      - raft_network
+    restart: always
+    image: hraftd
+    entrypoint: ./main -id node0 -haddr raft0:11000 ~/node0
+    expose:
+      - 11000
+    ports:
+      - 11000:11000
+
+  raft1:
+    networks:
+      - raft_network
+    image: hraftd
+    restart: always
+    entrypoint: ./main -id node1 -haddr :11001 -raddr raft1:12001 -join raft0:11000 ~/node1
+    expose:
+      - 11001
+    ports:
+      - 11001:11001
+
+  raft2:
+    networks:
+      - raft_network
+    image: hraftd
+    restart: always
+    entrypoint: ./main -id node2 -haddr :11002 -raddr raft2:12002 -join raft0:11000 ~/node2
+    expose:
+      - 11002
+    ports:
+      - 11002:11002
+
+
+networks:
+  raft_network:
